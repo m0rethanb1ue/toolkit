@@ -14,7 +14,7 @@ export type HttpMethod = 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE' | 'HEAD' | 
 /**
  * Request configuration
  */
-export interface FetchConfig<TBody = unknown> extends Omit<RequestInit, 'method' | 'body'> {
+export interface FetchBaseConfig<TBody = unknown> extends Omit<RequestInit, 'method' | 'body'> {
   /**
    * HTTP method
    */
@@ -95,7 +95,7 @@ export interface FetchConfig<TBody = unknown> extends Omit<RequestInit, 'method'
   /**
    * Transform request before sending
    */
-  transformRequest?: (config: FetchConfig<TBody>) => FetchConfig<TBody> | Promise<FetchConfig<TBody>>
+  transformRequest?: (config: FetchBaseConfig<TBody>) => FetchBaseConfig<TBody> | Promise<FetchBaseConfig<TBody>>
 
   /**
    * Transform response after receiving
@@ -175,9 +175,9 @@ export class TimeoutError extends FetchError {
 }
 
 /**
- * Fetcher instance configuration
+ * Fetch instance configuration
  */
-export interface FetcherConfig extends Omit<FetchConfig, 'body'> {
+export interface FetchConfig extends Omit<FetchBaseConfig, 'body'> {
   /**
    * Base URL for all requests
    */
@@ -191,7 +191,7 @@ export interface FetcherConfig extends Omit<FetchConfig, 'body'> {
   /**
    * Request interceptor
    */
-  onRequest?: (config: FetchConfig) => FetchConfig | Promise<FetchConfig>
+  onRequest?: (config: FetchBaseConfig) => FetchBaseConfig | Promise<FetchBaseConfig>
 
   /**
    * Response interceptor

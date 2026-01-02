@@ -14,7 +14,7 @@
  * })
  *
  * // Type-safe request with Result type (no try-catch needed!)
- * const result = await fetcher.get<User>('/users/1')
+ * const result = await fetch.get<User>('/users/1')
  *
  * if (result.success) {
  *   console.log(result.data.data.name)
@@ -24,10 +24,10 @@
  * ```
  */
 
-export { Fetcher, createFetch } from './core'
+export { Fetch, createFetch } from './core'
 export type {
-  FetchConfig,
-  FetcherConfig,
+  FetchBaseConfig as FetchConfig,
+  FetchConfig as FetcherConfig,
   FetchResponse,
   HttpMethod,
   Result,
@@ -48,13 +48,13 @@ export {
 import { createFetch } from './core'
 
 /**
- * Default fetcher instance
+ * Default fetch instance
  *
  * @example
  * ```typescript
- * import { fetcher } from '@rizzle/fetch'
+ * import { fetch } from '@rizzle/fetch'
  *
- * const result = await fetcher.get('/api/data')
+ * const result = await fetch.get('/api/data')
  * ```
  */
 export const fetch = createFetch()

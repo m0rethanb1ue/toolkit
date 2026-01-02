@@ -30,7 +30,7 @@
 
 import fetch from 'cross-fetch'
 import { createFetch } from './core'
-import type { FetcherConfig, FetchConfig } from './types'
+import type { FetchConfig, FetchBaseConfig } from './types'
 
 // Store original fetch
 let originalFetch: typeof globalThis.fetch | undefined
@@ -45,6 +45,8 @@ function hasFetch(): boolean {
 /**
  * Ensure fetch is available by using cross-fetch as fallback
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// @ts-ignore
 function ensureFetch(): typeof fetch {
   return (typeof globalThis !== 'undefined' && typeof globalThis.fetch === 'function')
     ? globalThis.fetch
@@ -54,7 +56,7 @@ function ensureFetch(): typeof fetch {
 /**
  * Polyfill global fetch with @rizzle/fetch
  *
- * @param config - Optional configuration for the fetcher
+ * @param config - Optional configuration for the fetch
  * @returns true if polyfill was applied, false if fetch is not available
  *
  * @example
@@ -70,13 +72,13 @@ function ensureFetch(): typeof fetch {
  * })
  * ```
  */
-export function polyfillFetch(config?: FetcherConfig): boolean {
+export function polyfillFetch(config?: FetchConfig): boolean {
   // Store original fetch if not already stored (may be undefined in older Node.js)
   if (!originalFetch && hasFetch()) {
     originalFetch = globalThis.fetch
   }
 
-  const fetcher = createFetch(config)
+  const fetch = createFetch(config)
 
   // Replace global fetch
   globalThis.fetch = async function (
@@ -87,16 +89,16 @@ export function polyfillFetch(config?: FetcherConfig): boolean {
     const url = input instanceof Request ? input.url : String(input)
 
     // Merge init with config
-    const fetchConfig: FetchConfig = {
+    const fetchConfig: FetchBaseConfig = {
       ...init,
-      method: (init?.method as FetchConfig['method']) ?? 'GET',
+      method: (init?.method as FetchBaseConfig['method']) ?? 'GET',
       headers: init?.headers,
       body: init?.body,
       signal: init?.signal,
     }
 
     // Execute request
-    const result = await fetcher.request(url, fetchConfig)
+    const result = await fetch.request(url, fetchConfig)
 
     // Return raw Response object for compatibility
     if (result.success) {

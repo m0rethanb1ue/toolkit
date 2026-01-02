@@ -47,9 +47,9 @@ async function postWithBody() {
   }
 }
 
-// Example 3: Configured fetcher with interceptors
-async function configuredFetcher() {
-  console.log('\n📌 Example 3: Configured Fetcher with Interceptors')
+// Example 3: Configured fetch with interceptors
+async function configuredFetch() {
+  console.log('\n📌 Example 3: Configured Fetch with Interceptors')
 
   const api = createFetch({
     baseURL: 'https://jsonplaceholder.typicode.com',
@@ -107,7 +107,7 @@ async function errorHandling() {
 
 // Example 5: Type-safe API client
 class UserAPI {
-  private fetcher = createFetch({
+  private fetch = createFetch({
     baseURL: 'https://jsonplaceholder.typicode.com',
   })
 
@@ -119,7 +119,7 @@ class UserAPI {
       username: string
     }
 
-    return this.fetcher.get<User[]>('/users', {
+    return this.fetch.get<User[]>('/users', {
       params: { _limit: limit },
     })
   }
@@ -131,7 +131,7 @@ class UserAPI {
       email: string
     }
 
-    return this.fetcher.get<User>(`/users/${id}`)
+    return this.fetch.get<User>(`/users/${id}`)
   }
 
   async createPost(userId: number, title: string, body: string) {
@@ -142,7 +142,7 @@ class UserAPI {
       body: string
     }
 
-    return this.fetcher.post<Post>('/posts', {
+    return this.fetch.post<Post>('/posts', {
       userId,
       title,
       body,
@@ -181,7 +181,7 @@ async function main() {
   try {
     await simpleGet()
     await postWithBody()
-    await configuredFetcher()
+    await configuredFetch()
     await errorHandling()
     await apiClientExample()
 

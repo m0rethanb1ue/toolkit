@@ -1,4 +1,4 @@
-import type { FetchConfig } from './types'
+import type { FetchBaseConfig } from './types'
 
 /**
  * Build URL with query parameters
@@ -52,9 +52,9 @@ export function mergeHeaders(...headersList: (HeadersInit | undefined)[]): Heade
  * Merge configurations
  */
 export function mergeConfig<T>(
-  base: FetchConfig<T> | undefined,
-  override: FetchConfig<T> | undefined
-): FetchConfig<T> {
+  base: FetchBaseConfig<T> | undefined,
+  override: FetchBaseConfig<T> | undefined
+): FetchBaseConfig<T> {
   if (!base) return override ?? {}
   if (!override) return base
 

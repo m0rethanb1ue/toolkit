@@ -1,7 +1,7 @@
 import fetch from 'cross-fetch'
 import type {
+  FetchBaseConfig,
   FetchConfig,
-  FetcherConfig,
   FetchError,
   FetchResponse,
   Result,
@@ -20,10 +20,10 @@ import {
 /**
  * Core fetch implementation with type safety and error handling
  */
-export class Fetcher {
-  private readonly config: FetcherConfig
+export class Fetch {
+  private readonly config: FetchConfig
 
-  constructor(config: FetcherConfig = {}) {
+  constructor(config: FetchConfig = {}) {
     this.config = config
   }
 
@@ -32,7 +32,7 @@ export class Fetcher {
    */
   async request<TResponse = unknown, TBody = unknown>(
     url: string,
-    config?: FetchConfig<TBody>
+    config?: FetchBaseConfig<TBody>
   ): Promise<Result<FetchResponse<TResponse>, FetchError>> {
     try {
       const response = await this.executeRequest<TResponse, TBody>(url, config)
@@ -54,7 +54,7 @@ export class Fetcher {
    */
   async get<TResponse = unknown>(
     url: string,
-    config?: Omit<FetchConfig, 'method' | 'body'>
+    config?: Omit<FetchBaseConfig, 'method' | 'body'>
   ): Promise<Result<FetchResponse<TResponse>, FetchError>> {
     return this.request<TResponse>(url, { ...config, method: 'GET' })
   }
@@ -65,7 +65,7 @@ export class Fetcher {
   async post<TResponse = unknown, TBody = unknown>(
     url: string,
     body?: TBody,
-    config?: Omit<FetchConfig<TBody>, 'method' | 'body'>
+    config?: Omit<FetchBaseConfig<TBody>, 'method' | 'body'>
   ): Promise<Result<FetchResponse<TResponse>, FetchError>> {
     return this.request<TResponse, TBody>(url, { ...config, method: 'POST', body })
   }
@@ -76,7 +76,7 @@ export class Fetcher {
   async put<TResponse = unknown, TBody = unknown>(
     url: string,
     body?: TBody,
-    config?: Omit<FetchConfig<TBody>, 'method' | 'body'>
+    config?: Omit<FetchBaseConfig<TBody>, 'method' | 'body'>
   ): Promise<Result<FetchResponse<TResponse>, FetchError>> {
     return this.request<TResponse, TBody>(url, { ...config, method: 'PUT', body })
   }
@@ -87,7 +87,7 @@ export class Fetcher {
   async patch<TResponse = unknown, TBody = unknown>(
     url: string,
     body?: TBody,
-    config?: Omit<FetchConfig<TBody>, 'method' | 'body'>
+    config?: Omit<FetchBaseConfig<TBody>, 'method' | 'body'>
   ): Promise<Result<FetchResponse<TResponse>, FetchError>> {
     return this.request<TResponse, TBody>(url, { ...config, method: 'PATCH', body })
   }
@@ -97,7 +97,7 @@ export class Fetcher {
    */
   async delete<TResponse = unknown>(
     url: string,
-    config?: Omit<FetchConfig, 'method' | 'body'>
+    config?: Omit<FetchBaseConfig, 'method' | 'body'>
   ): Promise<Result<FetchResponse<TResponse>, FetchError>> {
     return this.request<TResponse>(url, { ...config, method: 'DELETE' })
   }
@@ -107,9 +107,9 @@ export class Fetcher {
    */
   private async executeRequest<TResponse, TBody>(
     url: string,
-    config?: FetchConfig<TBody>
+    config?: FetchBaseConfig<TBody>
   ): Promise<FetchResponse<TResponse>> {
-    const mergedConfig = mergeConfig(this.config as FetchConfig<unknown>, config as FetchConfig<unknown>) as FetchConfig<TBody>
+    const mergedConfig = mergeConfig(this.config as FetchBaseConfig<unknown>, config as FetchBaseConfig<unknown>) as FetchBaseConfig<TBody>
     const retryCount = mergedConfig.retry?.count ?? 0
     let lastError: Error | undefined
 
@@ -148,7 +148,7 @@ export class Fetcher {
    */
   private async performRequest<TResponse, TBody>(
     url: string,
-    config: FetchConfig<TBody>
+    config: FetchBaseConfig<TBody>
   ): Promise<FetchResponse<TResponse>> {
     // Build full URL
     const baseURL = config.baseURL ?? ''
@@ -166,13 +166,13 @@ export class Fetcher {
     )
 
     // Apply request interceptor
-    type AnyConfig = FetchConfig<unknown>
+    type AnyConfig = FetchBaseConfig<unknown>
     let finalConfig: AnyConfig = { ...config, body: serializedBody, headers } as AnyConfig
     if (this.config.onRequest) {
       finalConfig = await this.config.onRequest(finalConfig)
     }
     if (config.transformRequest) {
-      finalConfig = (await config.transformRequest(finalConfig as FetchConfig<TBody>)) as AnyConfig
+      finalConfig = (await config.transformRequest(finalConfig as FetchBaseConfig<TBody>)) as AnyConfig
     }
 
     // Create abort controller for timeout
@@ -273,7 +273,7 @@ export class Fetcher {
   /**
    * Parse response based on content type
    */
-  private async parseResponse<T>(response: Response, config: FetchConfig): Promise<T> {
+  private async parseResponse<T>(response: Response, config: FetchBaseConfig): Promise<T> {
     const responseType = config.responseType ?? 'json'
     const parseJson = config.parseJson ?? true
 
@@ -318,16 +318,16 @@ export class Fetcher {
   }
 
   /**
-   * Create a new fetcher instance with extended configuration
+   * Create a new fetch instance with extended configuration
    */
-  extend(config: FetcherConfig): Fetcher {
-    return new Fetcher(mergeConfig(this.config, config) as FetcherConfig)
+  extend(config: FetchConfig): Fetch {
+    return new Fetch(mergeConfig(this.config, config) as FetchConfig)
   }
 }
 
 /**
- * Create a fetcher instance
+ * Create a fetch instance
  */
-export function createFetch(config?: FetcherConfig): Fetcher {
-  return new Fetcher(config)
+export function createFetch(config?: FetchConfig): Fetch {
+  return new Fetch(config)
 }
