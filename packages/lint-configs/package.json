@@ -1,10 +1,30 @@
 {
   "name": "@rizzle/lint-configs",
   "type": "module",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "rizzle <khoadduy@gmail.com>",
   "description": "Plug-and-play lint configurations for any project",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/m0rethanb1ue/toolkit.git",
+    "directory": "toolkit/packages/lint-configs"
+  },
+  "bugs": {
+    "url": "https://github.com/m0rethanb1ue/toolkit/issues"
+  },
+  "homepage": "https://github.com/m0rethanb1ue/toolkit/blob/main/packages/lint-configs/README.md",
+  "keywords": [
+    "eslint",
+    "prettier",
+    "lint",
+    "config",
+    "typescript",
+    "formatting",
+    "react",
+    "react-native",
+    "import-sort"
+  ],
   "main": "./dist/cjs/index.js",
   "module": "./dist/esm/index.mjs",
   "types": "./dist/types/index.d.ts",
@@ -45,25 +65,25 @@
     "prepublishOnly": "pnpm build && pnpm test"
   },
   "dependencies": {
-    "@eslint/js": "^9.17.0",
-    "eslint": "^9.17.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-import": "^2.32.0",
-    "eslint-plugin-simple-import-sort": "^12.1.1",
-    "prettier": "^3.4.2",
-    "typescript-eslint": "^8.18.1"
+    "@eslint/js": "9.17.0",
+    "eslint": "9.17.0",
+    "eslint-config-prettier": "9.1.0",
+    "eslint-plugin-import": "2.32.0",
+    "eslint-plugin-simple-import-sort": "12.1.1",
+    "prettier": "3.4.2",
+    "typescript-eslint": "8.18.1"
   },
   "devDependencies": {
-    "@types/eslint": "^9.6.1",
-    "@types/eslint__js": "^8.42.3",
-    "tsup": "^8.3.5",
-    "tsx": "^4.19.2",
-    "typescript": "^5.7.2"
+    "@types/eslint": "9.6.1",
+    "@types/eslint__js": "8.42.3",
+    "tsup": "8.3.5",
+    "tsx": "4.19.2",
+    "typescript": "5.7.2"
   },
   "peerDependencies": {
-    "eslint": "^9.0.0",
-    "prettier": "^3.0.0",
-    "typescript": "^5.0.0"
+    "eslint": "9.0.0",
+    "prettier": "3.0.0",
+    "typescript": "5.0.0"
   },
   "peerDependenciesMeta": {
     "eslint-plugin-react": {
@@ -75,25 +95,5 @@
     "eslint-plugin-testing-library": {
       "optional": true
     }
-  },
-  "keywords": [
-    "eslint",
-    "prettier",
-    "lint",
-    "config",
-    "typescript",
-    "formatting",
-    "react",
-    "react-native",
-    "import-sort"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/yourusername/tomokai-lab.git",
-    "directory": "toolkit/packages/lint-configs"
-  },
-  "bugs": {
-    "url": "https://github.com/yourusername/tomokai-lab/issues"
-  },
-  "homepage": "https://github.com/yourusername/tomokai-lab/tree/main/toolkit/packages/lint-configs#readme"
+  }
 }
